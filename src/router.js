@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
 
 Vue.use(Router);
 
@@ -10,17 +9,48 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home
+      redirect: "/login"
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+      path: "/login",
+      component: resolve => require(["./components/page/login.vue"], resolve)
+    },
+    {
+      path: "/",
+      component: resolve => require(["./components/common/Home.vue"], resolve),
+      meta: { title: "自述文件" },
+      children: [
+        {
+          path: "/dashboard",
+          component: resolve =>
+            require(["./components/page/Dashboard.vue"], resolve),
+          meta: { title: "系统首页" }
+        },
+        {
+          path: "/form",
+          component: resolve =>
+            require(["./components/page/BaseForm.vue"], resolve),
+          meta: { title: "基本表单" }
+        },
+        {
+          path: "/table",
+          component: resolve =>
+            require(["./components/page/BaseTable.vue"], resolve),
+          meta: { title: "基础表格" }
+        },
+        {
+          path: "/blogList",
+          component: resolve =>
+            require(["./components/page/BlogList.vue"], resolve),
+          meta: { title: "博客列表" },
+        },
+        {
+          path: "/blogDetail/:id",
+          component: resolve =>
+            require(["./components/page/BlogDetail.vue"], resolve),
+          meta: { title: "博客详情" }
+        }
+      ]
     }
   ]
 });
